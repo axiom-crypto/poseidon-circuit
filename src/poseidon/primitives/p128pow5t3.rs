@@ -1,7 +1,6 @@
-use halo2_proofs::arithmetic::FieldExt;
 use std::marker::PhantomData;
 
-use super::{Mds, Spec};
+use super::{FieldExt, Mds, Spec};
 
 /// The trait required for fields can handle a pow5 sbox, 3 field, 2 rate permutation
 pub trait P128Pow5T3Constants: FieldExt {
@@ -50,16 +49,14 @@ impl<Fp: P128Pow5T3Constants> Spec<Fp, 3, 2> for P128Pow5T3<Fp> {
 mod tests {
     use std::marker::PhantomData;
 
-    use halo2_proofs::arithmetic::FieldExt;
-    use halo2_proofs::halo2curves::group::ff::PrimeField;
-
     use super::super::pasta::{fp, test_vectors, Fp};
+    use super::FieldExt;
     use crate::poseidon::primitives::{permute, ConstantLength, Hash, Spec};
 
     /// The same Poseidon specification as poseidon::P128Pow5T3, but constructed
     /// such that its constants will be generated at runtime.
     #[derive(Debug)]
-    pub struct P128Pow5T3Gen<F: FieldExt, const SECURE_MDS: usize>(PhantomData<F>);
+    pub struct P128Pow5T3Gen<F, const SECURE_MDS: usize>(PhantomData<F>);
 
     type P128Pow5T3Pasta = super::P128Pow5T3<Fp>;
 

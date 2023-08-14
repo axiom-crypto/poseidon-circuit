@@ -1,24 +1,22 @@
 [package]
-name = "poseidon-circuit"
-version = "0.1.0"
+name = "poseidon-rs"
+version = "0.1.1"
 edition = "2021"
-
+autotests = false
+autobenches = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v2022_09_10" }
 lazy_static = "1.4.0"
 thiserror = "1.0"
 bitvec = "1"
 log = "0.4.0"
 rand_xorshift = "0.3.0"
 rand = "0.8"
-
-[patch."https://github.com/privacy-scaling-explorations/halo2.git"]
-halo2_proofs = { git = "https://github.com/scroll-tech/halo2.git", branch = "develop" }
+ff = "0.13"
 
 [features]
-default = ["halo2_proofs/parallel_syn","short"]
+default = []
 # Use an implementation using fewer rows (8) per permutation.
 short = []
 # printout the layout of circuits for demo and some unittests
@@ -31,10 +29,11 @@ rand_chacha = "0.3.0"
 plotters = "0.3"
 bencher = "0.1"
 subtle = "2"
+halo2_proofs = { git = "https://github.com/axiom-crypto/halo2.git", branch = "sync/use-ff-0.13" }
 
-[[bench]]
-name = "hash"
-harness = false
+# [[bench]]
+# name = "hash"
+# harness = false
 
 [profile.test]
 opt-level = 3

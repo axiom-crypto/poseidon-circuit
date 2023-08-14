@@ -5,7 +5,7 @@ use std::fmt;
 use std::iter;
 use std::marker::PhantomData;
 
-use halo2_proofs::arithmetic::FieldExt;
+use ff::FromUniformBytes;
 
 //pub(crate) mod fp;
 //pub(crate) mod fq;
@@ -16,6 +16,7 @@ mod fields;
 #[macro_use]
 mod binops;
 
+#[cfg(test)]
 pub(crate) mod bn256;
 #[cfg(test)]
 pub(crate) mod pasta;
@@ -40,6 +41,8 @@ pub(crate) type SpongeRate<F, const RATE: usize> = [Option<F>; RATE];
 
 /// The type used to hold the MDS matrix and its inverse.
 pub(crate) type Mds<F, const T: usize> = [[F; T]; T];
+
+pub trait FieldExt = FromUniformBytes<64> + Ord;
 
 /// A specification for a Poseidon permutation.
 pub trait Spec<F: FieldExt, const T: usize, const RATE: usize>: fmt::Debug {
@@ -70,7 +73,7 @@ pub trait Spec<F: FieldExt, const T: usize, const RATE: usize>: fmt::Debug {
 
         let round_constants = (0..(r_f + r_p))
             .map(|_| {
-                let mut rc_row = [F::zero(); T];
+                let mut rc_row = [F::ZERO; T];
                 for (rc, value) in rc_row
                     .iter_mut()
                     .zip((0..T).map(|_| grain.next_field_element()))
@@ -97,7 +100,7 @@ pub(crate) fn permute<F: FieldExt, S: Spec<F, T, RATE>, const T: usize, const RA
     let r_p = S::partial_rounds();
 
     let apply_mds = |state: &mut State<F, T>| {
-        let mut new_state = [F::zero(); T];
+        let mut new_state = [F::ZERO; T];
         // Matrix multiplication
         #[allow(clippy::needless_range_loop)]
         for i in 0..T {
@@ -215,7 +218,7 @@ impl<F: FieldExt, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
         let (round_constants, mds_matrix, _) = S::constants();
 
         let mode = Absorbing([None; RATE]);
-        let mut state = [F::zero(); T];
+        let mut state = [F::ZERO; T];
         state[(RATE + layout) % T] = initial_capacity_element;
 
         Sponge {
@@ -343,7 +346,7 @@ impl<F: FieldExt, const RATE: usize, const L: usize> Domain<F, RATE> for Constan
         // Poseidon authors encode the constant length into the capacity element, ensuring
         // that inputs of different lengths do not share the same permutation.
         let k = (L + RATE - 1) / RATE;
-        iter::repeat(F::zero()).take(k * RATE - L)
+        iter::repeat(F::ZERO).take(k * RATE - L)
     }
 }
 
@@ -360,7 +363,7 @@ impl<F: FieldExt, const RATE: usize, const L: usize> Domain<F, RATE> for Constan
 
     // iden3's scheme do not set any capacity mark
     fn initial_capacity_element() -> F {
-        F::zero()
+        F::ZERO
     }
 
     fn padding(input_len: usize) -> Self::Padding {
@@ -390,7 +393,7 @@ impl<F: FieldExt, const RATE: usize> Domain<F, RATE> for VariableLengthIden3 {
 
     fn padding(input_len: usize) -> Self::Padding {
         let k = input_len % RATE;
-        iter::repeat(F::zero()).take(if k == 0 { 0 } else { RATE - k })
+        iter::repeat(F::ZERO).take(if k == 0 { 0 } else { RATE - k })
     }
 
     fn layout(width: usize) -> usize {
@@ -494,7 +497,7 @@ impl<F: FieldExt, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
 #[cfg(test)]
 mod tests {
     use super::pasta::Fp;
-    use halo2_proofs::arithmetic::FieldExt;
+    use super::FieldExt;
 
     use super::{permute, ConstantLength, Hash, P128Pow5T3, P128Pow5T3Compact, Spec};
     type OrchardNullifier = P128Pow5T3<Fp>;
