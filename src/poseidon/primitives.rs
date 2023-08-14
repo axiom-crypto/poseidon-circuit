@@ -43,8 +43,6 @@ pub(crate) type SpongeRate<F, const RATE: usize> = [Option<F>; RATE];
 /// The type used to hold the MDS matrix and its inverse.
 pub(crate) type Mds<F, const T: usize> = [[F; T]; T];
 
-pub trait FieldExt = FromUniformBytes<64> + Ord;
-
 /// A specification for a Poseidon permutation.
 pub trait Spec<F: PrimeField, const T: usize, const RATE: usize>: fmt::Debug {
     /// The number of full rounds for this specification.
@@ -68,7 +66,7 @@ pub trait Spec<F: PrimeField, const T: usize, const RATE: usize>: fmt::Debug {
     /// Generates `(round_constants, mds, mds^-1)` corresponding to this specification.
     fn constants() -> (Vec<[F; T]>, Mds<F, T>, Mds<F, T>)
     where
-        F: FieldExt,
+        F: FromUniformBytes<64> + Ord,
     {
         let r_f = Self::full_rounds();
         let r_p = Self::partial_rounds();
@@ -220,7 +218,7 @@ impl<F: PrimeField, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
     /// Constructs a new sponge for the given Poseidon specification.
     pub(crate) fn new(initial_capacity_element: F, layout: usize) -> Self
     where
-        F: FieldExt,
+        F: FromUniformBytes<64> + Ord,
     {
         let (round_constants, mds_matrix, _) = S::constants();
 
@@ -440,7 +438,7 @@ impl<F: PrimeField, S: Spec<F, T, RATE>, D: Domain<F, RATE>, const T: usize, con
     /// Initializes a new hasher.
     pub fn init() -> Self
     where
-        F: FieldExt,
+        F: FromUniformBytes<64> + Ord,
     {
         Hash {
             sponge: Sponge::new(D::initial_capacity_element(), D::layout(T)),
@@ -506,8 +504,9 @@ impl<F: PrimeField, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
 
 #[cfg(test)]
 mod tests {
+    use ff::PrimeField;
+
     use super::pasta::Fp;
-    use super::FieldExt;
 
     use super::{permute, ConstantLength, Hash, P128Pow5T3, P128Pow5T3Compact, Spec};
     type OrchardNullifier = P128Pow5T3<Fp>;
