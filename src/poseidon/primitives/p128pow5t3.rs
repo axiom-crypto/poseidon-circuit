@@ -76,7 +76,7 @@ mod tests {
         }
 
         fn sbox(val: F) -> F {
-            val.pow_vartime(&[5])
+            val.pow_vartime([5])
         }
 
         fn secure_mds() -> usize {

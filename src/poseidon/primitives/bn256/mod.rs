@@ -136,7 +136,7 @@ mod tests {
         ];
 
         let output = {
-            let mut state = input.clone();
+            let mut state = input;
 
             let (rc, mds, _inv) = P128Pow5T3::<Fp>::constants();
             permute::<Fp, P128Pow5T3<Fp>, 3, 2>(&mut state, &mds, &rc[..]);
@@ -148,7 +148,7 @@ mod tests {
         };
 
         let output_compact = {
-            let mut state = input.clone();
+            let mut state = input;
 
             let (rc, mds, _inv) = P128Pow5T3Compact::<Fp>::constants();
             permute::<Fp, P128Pow5T3Compact<Fp>, 3, 2>(&mut state, &mds, &rc[..]);

@@ -3,7 +3,7 @@
 use std::marker::PhantomData;
 
 use bitvec::prelude::*;
-use ff::FromUniformBytes;
+use ff::{FromUniformBytes, PrimeField};
 
 const STATE: usize = 80;
 
@@ -49,7 +49,7 @@ pub(super) struct Grain<F> {
     _field: PhantomData<F>,
 }
 
-impl<F: FromUniformBytes<64>> Grain<F> {
+impl<F: PrimeField> Grain<F> {
     pub(super) fn new(sbox: SboxType, t: u16, r_f: u16, r_p: u16) -> Self {
         // Initialize the LFSR state.
         let mut state = bitarr![u8, Msb0; 1; STATE];
@@ -138,7 +138,10 @@ impl<F: FromUniformBytes<64>> Grain<F> {
 
     /// Returns the next field element from this Grain instantiation, without using
     /// rejection sampling.
-    pub(super) fn next_field_element_without_rejection(&mut self) -> F {
+    pub(super) fn next_field_element_without_rejection(&mut self) -> F
+    where
+        F: FromUniformBytes<64>,
+    {
         let mut bytes = [0u8; 64];
 
         // Poseidon reference impl interprets the bits as a repr in MSB order, because
@@ -165,7 +168,7 @@ impl<F: FromUniformBytes<64>> Grain<F> {
     }
 }
 
-impl<F: FromUniformBytes<64>> Iterator for Grain<F> {
+impl<F: PrimeField> Iterator for Grain<F> {
     type Item = bool;
 
     fn next(&mut self) -> Option<Self::Item> {
