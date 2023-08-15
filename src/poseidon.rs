@@ -1,5 +1,7 @@
 //! The Poseidon algebraic hash function.
 
+pub mod primitives;
+/*
 use std::convert::TryInto;
 use std::fmt;
 use std::marker::PhantomData;
@@ -326,3 +328,4 @@ impl<
             .squeeze(layouter.namespace(|| "squeeze"))
     }
 }
+*/
