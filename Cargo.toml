@@ -6,6 +6,7 @@ description = """
 Native rust implementation of the Poseidon hash function.
 This is forked from Scroll's audited Poseidon halo2 circuit implementation, but this crate does not include the circuit.
 """
+license = "MIT OR Apache-2.0"
 repository = "https://github.com/axiom-crypto/poseidon-circuit"
 autotests = false
 autobenches = false
