@@ -1,5 +1,5 @@
-//! mpt demo circuits
-//
+//! Native Poseidon implementation.
+//! Forked from Scroll's Poseidon Halo2 circuit library to update `ff` to `v0.13`.
 
 #![feature(slice_group_by)]
 #![allow(dead_code)]
