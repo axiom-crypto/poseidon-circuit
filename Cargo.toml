@@ -29,7 +29,7 @@ rand_chacha = "0.3.0"
 plotters = "0.3"
 bencher = "0.1"
 subtle = "2"
-halo2_proofs = { git = "https://github.com/axiom-crypto/halo2.git", branch = "sync/use-ff-0.13" }
+halo2_proofs = { package = "halo2-axiom", version = "*" }
 
 # [[bench]]
 # name = "hash"
