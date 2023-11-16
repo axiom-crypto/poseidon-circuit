@@ -1,7 +1,13 @@
 [package]
-name = "poseidon-rs"
+name = "poseidon-primitives"
 version = "0.1.1"
 edition = "2021"
+description = """
+Native rust implementation of the Poseidon hash function.
+This is forked from Scroll's audited Poseidon halo2 circuit implementation, but this crate does not include the circuit.
+"""
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/axiom-crypto/poseidon-circuit"
 autotests = false
 autobenches = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -29,7 +35,7 @@ rand_chacha = "0.3.0"
 plotters = "0.3"
 bencher = "0.1"
 subtle = "2"
-halo2_proofs = { git = "https://github.com/axiom-crypto/halo2.git", branch = "sync/use-ff-0.13" }
+halo2_proofs = { package = "halo2-axiom", version = "*" }
 
 # [[bench]]
 # name = "hash"
