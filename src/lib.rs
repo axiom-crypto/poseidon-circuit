@@ -1,12 +1,10 @@
 //! Native Poseidon implementation.
 //! Forked from Scroll's Poseidon Halo2 circuit library to update `ff` to `v0.13`.
 
-#![feature(slice_group_by)]
 #![allow(dead_code)]
 #![allow(unused_macros)]
 #![deny(missing_docs)]
 #![deny(unsafe_code)]
-#![feature(trait_alias)]
 
 //pub mod hash;
 pub mod poseidon;
