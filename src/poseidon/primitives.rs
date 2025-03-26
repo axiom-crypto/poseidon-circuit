@@ -232,7 +232,7 @@ impl<F: PrimeField, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
             mds_matrix,
             round_constants,
             layout,
-            _marker: PhantomData::default(),
+            _marker: PhantomData,
         }
     }
 
@@ -275,7 +275,7 @@ impl<F: PrimeField, S: Spec<F, T, RATE>, const T: usize, const RATE: usize>
             mds_matrix: self.mds_matrix,
             round_constants: self.round_constants,
             layout: self.layout,
-            _marker: PhantomData::default(),
+            _marker: PhantomData,
         }
     }
 }
@@ -350,7 +350,7 @@ impl<F: PrimeField, const RATE: usize, const L: usize> Domain<F, RATE> for Const
         // of RATE. On its own this would not be sponge-compliant padding, but the
         // Poseidon authors encode the constant length into the capacity element, ensuring
         // that inputs of different lengths do not share the same permutation.
-        let k = (L + RATE - 1) / RATE;
+        let k = L.div_ceil(RATE);
         iter::repeat(F::ZERO).take(k * RATE - L)
     }
 }
@@ -442,7 +442,7 @@ impl<F: PrimeField, S: Spec<F, T, RATE>, D: Domain<F, RATE>, const T: usize, con
     {
         Hash {
             sponge: Sponge::new(D::initial_capacity_element(), D::layout(T)),
-            _domain: PhantomData::default(),
+            _domain: PhantomData,
         }
     }
 
